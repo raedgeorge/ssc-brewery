@@ -59,4 +59,5 @@ public class BeerControllerIntegratedTest extends BaseITTest{
                 .andExpect(view().name("beers/createBeer"))
                 .andExpect(model().attributeExists("beer"));
     }
+
 }
