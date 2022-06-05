@@ -31,9 +31,9 @@ public class LoadUserData implements CommandLineRunner {
 
     private void loadUserData(){
 
-        Authority ADMIN = Authority.builder().role("ADMIN").build();
-        Authority USER = Authority.builder().role("USER").build();
-        Authority CUSTOMER = Authority.builder().role("CUSTOMER").build();
+        Authority ADMIN = Authority.builder().role("ROLE_ADMIN").build();
+        Authority USER = Authority.builder().role("ROLE_USER").build();
+        Authority CUSTOMER = Authority.builder().role("ROLE_CUSTOMER").build();
 
         User spring  = User.builder()
                 .username("spring")

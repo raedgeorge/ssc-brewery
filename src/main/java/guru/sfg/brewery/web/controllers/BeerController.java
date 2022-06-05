@@ -115,7 +115,7 @@ public class BeerController {
     }
 
     @PostMapping("/{beerId}/edit")
-    public String processUpdateForm(@Valid Beer beer, BindingResult result) {
+    public String processUpdateForm(@Valid Beer beer, @PathVariable Integer beerId ,BindingResult result) {
         if (result.hasErrors()) {
             return "beers/createOrUpdateBeer";
         } else {

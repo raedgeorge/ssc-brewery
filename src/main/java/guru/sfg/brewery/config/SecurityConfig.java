@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,6 +23,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JpaUserDetailsService jpaUserDetailsService;
@@ -47,22 +48,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+//
+//        http.addFilterBefore(restUrlAuthFilter(authenticationManager()),
+//                             UsernamePasswordAuthenticationFilter.class)
+//            .csrf().disable();
+//
+//        http.addFilterBefore(restHeaderAuthFilter(authenticationManager()),
+//                             UsernamePasswordAuthenticationFilter.class);
 
-        http.addFilterBefore(restUrlAuthFilter(authenticationManager()),
-                             UsernamePasswordAuthenticationFilter.class)
-            .csrf().disable();
-
-        http.addFilterBefore(restHeaderAuthFilter(authenticationManager()),
-                             UsernamePasswordAuthenticationFilter.class);
+        http.csrf().disable();
 
         http
             .authorizeRequests(authorize -> {
                 authorize.antMatchers("/h2-console/**").permitAll(); // not for production environment
 
-                authorize.antMatchers(HttpMethod.GET, "/", "/webjars/**", "/resources/**").permitAll();
-                authorize.antMatchers(HttpMethod.GET, "/beers/find", "/beers").permitAll();
-                authorize.antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll();
-                authorize.mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}").permitAll();
+                authorize.antMatchers(HttpMethod.GET, "/api/v1/beer/**")
+                                    .hasAnyRole("ADMIN", "USER", "CUSTOMER");
+
+                authorize.antMatchers(HttpMethod.GET, "/brewery/breweries")
+                                     .hasAnyRole("CUSTOMER", "ADMIN");
+
+                authorize.antMatchers(HttpMethod.GET, "/brewery/api/v1/breweries")
+                                     .hasAnyRole("CUSTOMER", "ADMIN");
+
+                authorize.antMatchers(HttpMethod.GET, "/", "/webjars/**", "/resources/**")
+                                     .permitAll();
+
+                authorize.antMatchers(HttpMethod.GET, "/beers/find", "/beers")
+                                     .hasAnyRole("ADMIN", "USER", "CUSTOMER");
+
+                authorize.mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}")
+                                     .hasAnyRole("ADMIN", "USER", "CUSTOMER");
             })
             .authorizeRequests()
                 .anyRequest()
