@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,12 +45,10 @@ public class JpaUserDetailsService implements UserDetailsService {
         if (authorities != null && authorities.size() > 0){
 
         return authorities.stream()
-                 .map(authority -> authority.getRole())
+                 .map(authority -> authority.getPermission())
                  .map(role -> new SimpleGrantedAuthority(role))
                  .collect(Collectors.toSet());
 
-//            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(authorities.toString());
-//            return Collections.singletonList(authority);
         }
         else {
             return new HashSet<>();

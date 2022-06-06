@@ -61,24 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests(authorize -> {
                 authorize.antMatchers("/h2-console/**").permitAll(); // not for production environment
-
-                authorize.antMatchers(HttpMethod.GET, "/api/v1/beer/**")
-                                    .hasAnyRole("ADMIN", "USER", "CUSTOMER");
-
-                authorize.antMatchers(HttpMethod.GET, "/brewery/breweries")
-                                     .hasAnyRole("CUSTOMER", "ADMIN");
-
-                authorize.antMatchers(HttpMethod.GET, "/brewery/api/v1/breweries")
-                                     .hasAnyRole("CUSTOMER", "ADMIN");
-
-                authorize.antMatchers(HttpMethod.GET, "/", "/webjars/**", "/resources/**")
-                                     .permitAll();
-
-                authorize.antMatchers(HttpMethod.GET, "/beers/find", "/beers")
-                                     .hasAnyRole("ADMIN", "USER", "CUSTOMER");
-
-                authorize.mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}")
-                                     .hasAnyRole("ADMIN", "USER", "CUSTOMER");
+                authorize.antMatchers(HttpMethod.GET, "/", "/webjars/**", "/resources/**").permitAll();
             })
             .authorizeRequests()
                 .anyRequest()

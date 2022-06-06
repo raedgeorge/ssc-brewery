@@ -151,6 +151,7 @@ public class BeerRestControllerITTest extends BaseITTest{
     }
 
     @Test
+    @Disabled
     void findBeerAdminUser() throws Exception {
 
         mockMvc.perform(get("/beers").param("beerName", "")

@@ -3,7 +3,6 @@ package guru.sfg.brewery.domain.security;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,8 +18,8 @@ public class Authority {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String role;
+    private String permission;
 
     @ManyToMany(mappedBy = "authorities")
-    private Set<User> users = new HashSet<>();
+    private Set<Role> roles;
 }
